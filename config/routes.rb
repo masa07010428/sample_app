@@ -1,17 +1,8 @@
 Rails.application.routes.draw do
   
+
   root 'static_pages#home'
-  
-  # root 'static_pages#about'
-  
-  # root 'static_pages#help'
-  
-  # root 'static_pages#contact'
-  
-  # root 'static_pages#signup'
-  
-  # root 'static_pages#login'
-  
+    
   get '/help', to: 'static_pages#help'
   
   get '/about', to: 'static_pages#about'
@@ -21,6 +12,12 @@ Rails.application.routes.draw do
   get '/signup', to: 'users#new'
 
   post '/signup', to: 'users#create'
+
+  get '/login', to: 'sessions#new'
+
+  post '/login', to: 'sessions#create'
+
+  delete 'logout', to: 'sessions#destroy'
 
   resources :users
 end
