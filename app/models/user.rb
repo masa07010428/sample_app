@@ -10,14 +10,14 @@ class User < ApplicationRecord
   validates :password, presence: true, length: { minimum: 6 }, allow_nil:true
 
   # 渡された文字列のハッシュ値を返す
-  def User.digest(string)
+  def self.digest(string)
     cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST :
                                                   BCrypt::Engine.cost
     BCrypt::Password.create(string, cost: cost)
   end
 
   # ランダムなトークンを返す
-  def User.new_token
+  def self.new_token
     SecureRandom.urlsafe_base64
   end
   
@@ -47,6 +47,18 @@ class User < ApplicationRecord
   # 有効化用のメールを送信する
   def send_activation_email
     UserMailer.account_activation(self).deliver_now
+  end
+
+  #パスワード再設定の属性を設定する
+  def create_reset_digest
+    self.reset_token = User.new_token
+    update_attribute(:reset_digest, User.digest(reset_token))
+    update_attribute(:reset_sent_at,Time.zone.now)
+  end
+
+  #パスワード再設定のメールを送信する
+  def send_password_reset_email
+    UserMailer.password_reset(self.deliver_now)
   end
 
   private
