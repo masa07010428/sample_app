@@ -20,9 +20,8 @@ User.create!(name:  name,
         activated_at: Time.zone.now)
 end
 
-users = User.order(:criated_at).take(6)
+users = User.order(:created_at).take(6)
 50.times do
-        content = Faker::lorem.sentence(5)
-        users.each { |user| user.microposts.criate!(content) }
-end
+        content = Faker::Lorem.sentence(5)
+        users.each { |user| user.microposts.create!(content:  content) }
 end
